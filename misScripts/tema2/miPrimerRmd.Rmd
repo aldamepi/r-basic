@@ -1,0 +1,67 @@
+---
+title: "miPrimerRmarkdown"
+author: "Alberto Mengual"
+date: "4/24/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+Voy a probar a hacer el sistema de ecuaciones del tema 2 del curso:
+$$ |x| = \left\{ \begin{array}{rl}
+-x & \text{si } x \le 0 \\
+x & \text{si } x \ge 0
+\end{array} \right. $$
+
+## Probando CHUNKS
+### Y Rmd
+
+
+Hoy NO vamos a calcular $\sqrt{2}-e^{-2}$, pero si $|\cos{\log{(e)^{\pi!}}} |$ y $5\pi!$:
+
+```{r prueba, echo=FALSE, eval=TRUE, comment=NA, results='hold'}
+abs(cos(log10(exp(factorial(pi)))))
+factorial(5*pi)
+x=1:5
+sqrt(x)
+```
+
+## Probando shortcut alt+cmd+I
+Vamos a generar un cuadrado mágico:
+```{r magic, echo=FALSE, message=FALSE, comment=NA}
+library(magic)
+magic(5)
+
+```
+
+## INSERTAR CHUNKS EN LINEA
+
+La $\sqrt[5]{64}$ es `r 64^{1/5}` ta chaaan!
+
+2.2973967^5

@@ -1,0 +1,34 @@
+---
+title: "r & Python"
+author: "Alberto Mengual"
+date: "4/24/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Reticulate
+
+```{r reticulateBasico}
+library(reticulate)
+use_python("/users/albertomengual/opt/anaconda3/bin/python3.8")
+
+#py_install("nombre del paquete")
+os <- import("os")
+os$listdir(".")
+```
+
+
+```{r}
+source_python("add.py")
+add(3,4)
+
+py_run_file()
+
+```
+
+

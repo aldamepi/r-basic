@@ -1,0 +1,66 @@
+---
+title: "Apuntes Tema 5"
+author: "Alberto Mengual"
+date: "6/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TEMA 5 - DATA FRAMES
+
+
+
+
+
+
+## CREACION DE DATA FRAME
+
+```{r creacionDataFrame}
+personas=c("Candelita","Luki","Ruben","Ethan","Basichi")
+genero=c(          "M",   "H",    "H",    "H",      "H")
+edad=c(              3,     4,      2,      4,       6)
+hermanitos=c(        1,     1,      1,      1,       2)
+sobris=data.frame(gen=genero,ed=edad,herm=hermanitos)
+
+row.names(sobris)=personas
+
+sobris
+
+write.table(sobris, file="../../sobrisDF.txt")
+
+dfSobris=read.table(file = "../../sobrisDF.txt", header = TRUE)
+dfSobris
+row.names(dfSobris)=c("Cande","Luk","Rub","Eth","Bas")
+row.names(dfSobris)
+```
+
+
+## CREACION SUBDATA FRAME
+```{r subdataframes}
+subsetosa= subset(iris,Species== "setosa" & Sepal.Width>2,
+                  select=c(2,5))
+str(subsetosa)
+
+library(tidyverse)
+
+tisetosa = select(iris,starts_with("Sepal"), matches("Species")
+                  )[iris$Sepal.Width>2 & iris$Species=="setosa", ]
+str(tisetosa)
+
+subvirgi = subset(iris,Species=="virginica" & Sepal.Length<3, select = c(1,5))
+str(subvirgi)
+
+tivirgi=select(iris,matches("Spieces"),ends_with("Length")
+               )[iris$Species=="virginica" & iris$Sepal.Length<3, ]
+str(tivirgi)
+
+```
+
+
+## APLICANDO FUNCIONES
+
+
+

@@ -1,0 +1,137 @@
+---
+title: "Ejercicios sobre LaTex, R y Markdown"
+author: "Alberto Mengual"
+date: "5/13/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instrucciones
+
+En primer lugar, debéis reproducir este documento tal cual está. Necesitaréis instalar [MiKTeX](https://miktex.org/download)
+y [Texmaker](https://www.xm1math.net/texmaker/download.html).
+
+
+A continuación de cada pregunta, tenéis que redactar vuestras respuestas de manera correcta y argumentada, indicando qué hacéis, por qué, etc. Si se os pide utilizar instrucciones de `R`, tendréis que mostrarlas todas en chunks.
+
+
+El objetivo de esta tarea es que os familiaricéis con los documentos Markdown, las fórmulas en \LaTeX\   y los chunks de `R`. Y, de lo más importante, que os acostumbréis a explicar lo que hacéis en cada momento.
+
+# Preguntas
+
+## Pregunta 1
+
+Realizad los siguientes productos de matrices en `R`:
+
+$$A \cdot B$$
+$$B \cdot A$$
+$$(A\cdot B)^t$$
+$$B^t \cdot A$$
+$$(A \cdot B)^{-1}$$
+$$A^{-1} \cdot B^t$$
+
+donde
+$$A = \begin{pmatrix}1 & 2 & 3 & 4\\ 4 & 3 & 2 & 1\\ 0 & 1 & 0 & 2\\ 3 & 0 & 4 & 0\end{pmatrix}\qquad B= \begin{pmatrix}4 & 3 & 2 & 1\\ 0 & 3 & 0 & 4\\ 1 & 2 & 3 & 4\\ 0 & 1 & 0 & 2\end{pmatrix}$$
+
+Finalmente, escribe haciendo uso de \LaTeX\  el resultado de los dos primeros productos de forma adecuada.
+
+### Solución 1
+
+Los pasos a seguir hasta escribir en \LaTeX\ los dos primeros productos son los siguientes:
+
+1. Abrir un CHUNK de `R`
+2. Crear las matrices, se podría hacer con `rbind` , con  `cbind` o `matrix(c(...), nrow=4, byrow= )`
+3. Realizar las operaciones descritas
+5. Finalmente escribir los resultados en \LaTeX\
+
+
+```{r solucion1, comment=NA}
+A=matrix(c(1,2,3,4,4,3,2,1,0,1,0,2,3,0,4,0),nrow = 4,byrow = T)
+B=rbind(c(4,3,2,1),c(0,3,0,4),c(1,2,3,4),c(0,1,0,2))
+
+A%*%B
+B%*%A
+t(A%*%B)
+t(B)%*%A
+solve(A%*%B)
+solve(A)%*%t(B)
+```
+
+$$A \cdot B = \begin{pmatrix}7&19&11&29\\ 18&26&14&26\\ 0&5&0&8\\ 16&17&18&19\end{pmatrix}\qquad B\cdot A = \begin{pmatrix}19&19&22&23\\24&9&22&3\\21&11&23&12\\10&3&10&1\end{pmatrix}$$
+
+## Pregunta 2
+
+Considerad en un vector los números de vuestro DNI y llamadlo `dni`. Por ejemplo, si vuestro DNI es 54201567K, vuestro vector será $$dni = (5,4,2,0,1,5,6,7)$$.
+
+Definid el vector en `R`. Calculad con `R` el vector `dni` al cuadrado, la raíz cuadrada del vector `dni` y, por último, la suma de todas las cifras del vector `dni`.
+
+Finalmente, escribid todos estos vectores también a \LaTeX
+
+### Solución 2
+
+1. Abrir un CHUNK de `R`
+2. Crear el vector
+3. Hacer las operaciones: 
+    + el cuadrado
+    + la raiz cuadrada
+    + la suma de todas las cifras
+4. Escribir los vectores en \LaTeX
+
+```{r solucion2, comment=NA}
+dni=c(4,4,5,3,8,9,1,2)
+dni^2
+sqrt(dni)
+sum(dni)
+
+
+```
+$$dni^2= (16,16,25,9,64,81,1,4)$$
+$$\sqrt{dni}= (2,2,2'236,1'732,2'828,3,1,1'414)$$
+$$\sum{dni} = 36$$
+
+## Pregunta 3
+
+Considerad el vector de las letras de vuestro nombre y apellido. Llamadlo `name`. Por ejemplo, en mi caso sería $$nombre = (M,A,R,I,A,S,A,N,T,O,S)$$
+
+Definid dicho vector en `R`. Calculad el subvector que solo contenga vuestro nombre. Calculad también el subvector que contenga solo vuestro apellido.
+Ordenadlo alfabéticamente. Cread una matriz con este vector.
+
+Redactad todos vuestros resultados y utilizad \LaTeX\   cuando toque
+
+### Solucion 3  
+
+1. Abrir un CHUNCK
+2. Crear el vector name
+3. Realizar las operaciones:
+    + subvector con nombre
+    + subvector con apellido
+    + Ordenar apellido alfabeticamente
+    + Crear una matriz con ese vector
+    
+    nota: Voy guardando los resultados en variables para poder trabajar con ellos directamente a continuación.
+4. Redactar los resultado usando \LaTeX
+
+```{r solucion3, comment=NA, warning=FALSE}
+name=c('A','L','B','E','R','T','O','M','E','N','G','U','A','L')
+name
+name[1:7]
+name[1:which(name=='O')]
+apellido=name[8:length(name)]
+apellido
+abc=sort(apellido)
+abc
+P=matrix(abc,nrow = 4,ncol = 2,byrow = F)
+P
+```
+$$name= (A,L,B,E,R,T,O,M,E,N,G,U,A,L)$$
+$$nombre = (A,L,B,E,R,T,O)$$
+$$apellido = (M,E,N,G,U,A,L)$$
+$$abc= (A,E,G,L,M,N,U)$$
+$$P= \begin{pmatrix}A&M \\ E&N \\ G&U \\ L&A \end{pmatrix}$$
+
+
+
+

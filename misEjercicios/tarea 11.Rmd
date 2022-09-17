@@ -1,0 +1,145 @@
+---
+title: "tarea11"
+author: "Alberto Mengual"
+date: "7/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Ejercicio 5
+```{r}
+
+barplot(sample(30:40,size=5,replace = T),beside = T, xlab = "edad", ylim = c(0,40))
+```
+
+
+# Ejercicio 6
+```{r}
+alumnos = c("manolito","juanita","fernandito","estebita","mariela","conchita")
+pie(table(alumnos))
+```
+
+
+# Ejercicio 7
+```{r}
+#help(DNase)
+dn = DNase
+head(dn)
+barplot(table(dn$density))
+```
+
+
+# Respuestas del profesor:
+1.table(alumnos)
+2.
+prop.table(table(edades)). También es correcto table(edades)/length(edades)
+3
+table(altura,peso)
+4
+prop.table(table(altura,edad))
+5
+barplot(table(edad))
+6
+pie(table(alumnos))
+7
+barplot(table(DNase$density))
+
+
+# Cual es la diferencia entre barplot y barplot(table)
+
+
+# Solución de un compañero ojito a los gráficos
+Dad la instrucción que defina la tabla de frecuencias absolutas de un vector llamado "alumnos"
+
+alumnos = ["Juan","Luis","Pedro","Juan","Juan",
+          "Pedro","Fernando","Pedro","Fernando","Luis",
+          "Juan","Pedro","Pedro","Fernando","Fernando"]
+tab = pd.Categorical(alumnos)
+tab = pd.crosstab(index = tab,
+                      columns = "total")
+tab
+
+Con una sola instrucción, definid la tabla de frecuencias relativas de un vector llamado "edades"
+
+edades = [22,15,22,16,22,15,14,14,14,13,
+          22,22,15,15,14,14,15,15,13,13]
+pd.crosstab(index=pd.Categorical(edades),
+            columns="total")/pd.crosstab(index=pd.Categorical(edades),
+            columns="total").sum()
+
+Con una sola instrucción, definid la tabla bidimensional conjunta de frecuencias absolutas de dos vectores llamados "altura" y "peso", de forma que las filas correspondan a "altura" y las columnas a "peso"
+
+altura = [1.80,1.75,1.60,1.75,1.80,1.65,1.65,1.80,1.75,1.60,
+          1.60,1.80,1.75,1.75,1.65,1.60,1.80,1.80,1.75,1.60]
+peso = [100,70,70,85,85,70,90,90,75,70,
+        90,80,75,80,80,75,100,80,90,80]
+pd.crosstab(index = pd.Categorical(altura),
+            columns = pd.Categorical(peso))
+
+Con una sola instrucción, definid la tabla bidimensional conjunta de frecuencias relativas calculadas dentro del total, de dos vectores llamados "edad" y "altura", de forma que las filas correspondan a "altura" y las columnas a "edad"
+
+edad = [22,25,22,26,22,25,24,24,24,23,
+          22,22,25,25,24,24,25,25,23,23]
+altura = [1.80,1.75,1.60,1.75,1.80,1.65,1.65,1.80,1.75,1.60,
+          1.60,1.80,1.75,1.75,1.65,1.60,1.80,1.80,1.75,1.60]
+pd.crosstab(index = pd.Categorical(altura),
+            columns = pd.Categorical(edad),
+            margins = True)/pd.crosstab(index = pd.Categorical(altura),
+            columns = pd.Categorical(edad),
+            margins = True).loc["All","All"]
+
+Con una sola instrucción, dibujad un diagrama de barras básico de un vector llamado "edad"
+
+edad = [22,25,22,26,22,25,24,24,24,23,
+          22,22,25,25,24,24,25,25,23,23]
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.bar(np.array(pd.Categorical(edad).categories),#Obtenemos cada una de las #categorias para gráficar las edades presentes y se convierte en un array
+        np.array(pd.crosstab(index=pd.Categorical(edad),
+                             columns="total")["total"],),#Obtenemos las 
+#frecuencias absolutas de las edades accediendo a la  columna llamada total
+        color = ['black', 'red', 'green', 'blue', 'cyan']
+       )
+plt.show()
+
+Con una sola instrucción, dibujad un diagrama circular básico de un vector llamado "alumnos"
+
+alumnos = ["Juan","Luis","Maria","Juan","Juan", 
+          "Pedro","Fernando","Pedro","Fernando","Luis",
+          "Juan","Pedro","Maria","Fernando","Fernando",
+          "Maria","Maria","Pedro","Fernando","Luis"]
+plt.pie(np.array(pd.crosstab(index=pd.Categorical(alumnos),
+                             columns="total")["total"]),
+        labels = ["Fernando","Juan","Luis","Maria","Pedro"],
+        autopct="%d%%")
+plt.title("Porcentajes de los nombres de los alumnos")
+plt.show()
+
+La tabla "DNase" es uno de los data frames que tiene predefinidos R. Dad la instrucción que dibuje un diagrama de barras básico de la variable "density" de este mismo data frame
+
+Para este caso tuve que cargar el Data Frame en R y exportarlo como .txt, posteriormente lo importe en Python.
+
+ DNase = pd.read_csv("Ficheros de datos/DNase.txt",
+                    delimiter = "\t",
+                    decimal = ".",
+                    encoding= "utf-8")
+plt.figure(figsize=(100,100))
+plt.xlim(0,2.05)
+plt.bar(np.array(pd.Categorical(DNase["density"]).categories),
+        np.array(pd.crosstab(index=DNase["density"],
+                             columns="total")["total"]),
+        width = 0.001)
+plt.show()
+
+
+
+
+
+
+
+

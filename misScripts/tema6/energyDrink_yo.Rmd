@@ -1,0 +1,52 @@
+---
+title: "energyDrink"
+author: "Alberto Mengual"
+date: "7/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cargarTabla}
+ed = read.table("../../data/EnergyDrink")
+str(ed)
+head(ed)
+
+```
+
+
+```{r funcionSummary}
+head(ed)
+summary(ed) # solo funciona con factores, no se puede filtrar
+```
+
+```{r aplicandoTable}
+apply(ed, MARGIN = 2, FUN = table)
+# devuelve la tabla de las frecuencias absolutas a cada uno de los factores por separado.
+table(ed$sexo)
+```
+
+```{r tableDatafr}
+table(ed)
+
+table(ed[c(1,3)])
+
+```
+
+```{r ftable}
+ftable(ed, col.vars="bebe")
+#ftable(aperm(ed, perm = c("estudio","sexo","bebe")))
+#ftable(ed$estudio, ed$sexo, ed$bebe)
+100*ftable(prop.table(table(ed)), col.vars = "bebe")
+100*ftable(prop.table(table(ed), margin = 1),col.vars="bebe")
+100*ftable(prop.table(table(ed), margin = 2),col.vars="bebe", 
+           row.vars =c( "sexo","estudio"))
+```
+
+```{r crosstable}
+library(gmodels)
+CrossTable(ed[[1]],ed[[3]], prop.chisq = FALSE)
+```
+

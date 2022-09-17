@@ -1,0 +1,162 @@
+---
+title: "tarea 12"
+author: "Alberto Mengual"
+date: "7/12/2021"
+output: html_document
+---
+
+# TAREA 12
+
+Carga el conjunto de datos de la carpeta data llamado grades.txt en R y responde a las siguientes preguntas
+```{r cargarData}
+data = read.table("../data/grades.txt")
+
+head(data)
+str(data)
+```
+
+
+## Preguntas de esta tarea
+#### 1
+Calcula la media, la mediana y la moda redondeada a dos cifras decimales de las notas numéricas de los exámenes tanto de forma conjunta como por estudio universitario. ¿En qué grupo observamos la nota más alta? ¿Qué grupo está por encima de la media de estudiantes?
+
+```{r pregunta1}
+media = round(mean(data$nota),2)
+medias = aggregate(nota~estudio, data = data, FUN = mean)
+medias$nota = sapply(medias$nota, FUN = round, digits = 2)
+
+mediana = round(median(data$nota),2)
+medianas = aggregate(nota~estudio, data = data, FUN = median)
+medianas$nota = sapply(medianas$nota, FUN = round, digits = 2)
+
+notasModa = round(data$nota,1)
+moda = names(which(table(notasModa)==max(table(notasModa))))
+modaF = function(x){names(which(table(x) == max(table(x))))}
+
+modas = aggregate(notasModa~data$estudio, FUN = modaF)
+#modas$nota = sapply(modas$nota, FUN = as.numeric)
+#modas$nota = sapply(modas$nota, FUN = round, digits = 2)
+
+estAlta = data$estudio[data$nota == max(data$nota)]
+notaAlta = max(data$nota)
+
+encima = medias$estudio[medias$nota > media]
+
+print (sprintf("La nota media global es %.3f",media))
+print (medias)
+
+print(sprintf("La mediana glogal es %.2f",mediana))
+print(medianas)
+
+print(sprintf("La moda global es %.2f",as.numeric(moda)))
+print(modas)
+
+print(sprintf("La nota más alta es: %.2f. Se da en: %s", notaAlta, estAlta))
+print(paste("Los estudios con notas por encima de la media son:",encima))
+
+```
+
+#### 2
+¿En qué grupo observamos más variación de notas? Justifica tu respuesta
+```{r pregunta2}
+sdp = function(x){
+  sd(x)*(length(x)-1)/length(x)
+}
+sdNotas = aggregate(nota~estudio, data = data, FUN = sdp)
+sdNotas$nota = sapply(sdNotas$nota, FUN = round, digits = 2)
+
+grupoMaxSd = sdNotas$estudio[sdNotas$nota == max(sdNotas$nota)]
+
+print("Esta es la desviación típica poblacional agrupada")
+print(sdNotas)
+print(sprintf("El grupo con más variación es: %s",grupoMaxSd))
+```
+
+
+#### 3
+¿Hay mucha diferencia entre el grupo que has respondido en el ejercicio 1 y en el ejercicio 2? Intenta dar una explicación objetiva del suceso
+```{r pregunta3}
+print(sprintf("El grupo con mayor nota media y mayor desviación típica es: %s", grupoMaxSd))
+boxplot(data$nota~data$estudio)
+points(medias$nota)
+summA = aggregate(nota~estudio, data = data, FUN = summary, digits = 3)
+head(summA)
+print(sprintf("El grupo %s es el que acumula las notas en torno a la media más alta con una menor precisión, por eso es también el grupo con mayor variación",grupoMaxSd))
+```
+
+#### 4
+Dibuja en un único gráfico los cuatro diagramas de caja, uno para cada grupo. Añade así mismo la nota media, pon nombre, título y color al gráfico para documentar el gráfico correctamente.
+```{r pregunta4}
+boxplot(data$nota~data$estudio, xlab = "estudio", ylab = "notas",
+        main = "Diagrama de Notas agrupadas por Estudio", col = "darkorange")
+points(medias$nota, pch = 19, col = "dodgerblue4", cex = 1.5)
+```
+
+
+#### 5
+¿Observas algunos valores atípicos en el boxplot anterior? ¿A qué grupo pertence? 
+
+Si, pertenecen a los grupos de Industrial, Informática y Telematica
+
+
+#### 6
+Indica a partir del boxplot anterior en qué grupo observamos más variedad de notas.
+
+En el grupo de Mates, el rango intercuartilico es aproximadamente 2.
+
+
+#### 7
+En base a todo lo anterior, ¿puedes afirmar de forma estadística que el examen de carrera ha ido mejor en algún estudio que en los demás? 
+
+El examen de carrera ha ido mejor en los grupos que tienen sus notas medias por encima de la media del conjunto total, el grupo de Mates tiene la mayor nota media y el grupo de Informática agrupa sus notas con más precisión cerca de su media.
+
+
+
+
+### SOLUCIONES DE OTROS ALUMNOS
+
+```{r}
+# by(data,data$estudio, FUN = summary)
+```
+
+
+```{r}
+
+#moda_datos <- function(datos) {
+#      datos$nota = round(datos$nota,2)#Primero redondeamos el valor de las 
+#notas, ya que con muchos decimales existiria un gran numero de modas
+#      mo = round(as.numeric(names(which(table(datos$nota)==
+#                                          max(table(datos$nota))))),2)
+#      return(mo)
+#      }
+#moda_global = moda_datos(notas)
+#moda_global
+
+#sep = split(notas,f=notas$estudio)#Separamos por estudios para el calculo de
+#las modas
+#moda_industrial = moda_datos(sep$Industrial)
+#moda_industrial
+
+```
+
+```{r}
+
+#by(notas$nota, notas$estudio, FUN = summary, digits = 3)
+
+#paste0(cat("\nNota media total: "), round(mean(notas$nota), 2))
+
+```
+
+
+```{r}
+
+#medias = aggregate(nota~estudio, data = notas, FUN = mean)
+#boxplot(nota~estudio, notas,
+#        main = "Comparativa de notas por grado", xlab = "Grupo estudiantil",
+#        ylab = "Notas", col = c("gold1","salmon2","springgreen3","mistyrose"))
+#points(medias, pch = 18, cex = 1.5, col = "red4")
+#
+#str(boxplot)
+
+```
+

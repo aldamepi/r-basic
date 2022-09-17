@@ -1,0 +1,47 @@
+---
+title: "diagramasCualitativas"
+author: "Alberto Mengual"
+date: "7/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# DIAGRAMA DE BARRAS
+```{r}
+set.seed(88)
+sexo = sample(c("H","M"), size = 12, replace = TRUE)
+barplot(table(sexo), col = c("lightblue","pink"), main = " Diagrama de barras de \n las frecuencias absolutas
+        de la variable \"Sexo\"")
+```
+
+```{r}
+barplot(prop.table(table(sexo)), main = "Diagrama de barras de 
+        las frecuencias relativas \n de la variable \"Sexo\"",
+        col=c("lightblue","pink"), ylim = c(0,0.7))
+```
+
+```{r}
+par(mfrow=c(1,2))
+barplot(table(sexo), col = c("aquamarine4"), main = " Diagrama de barras de \n las frecuencias absolutas
+        de la variable \"Sexo\"")
+barplot(prop.table(table(sexo)), main = "Diagrama de barras de 
+        las frecuencias relativas \n de la variable \"Sexo\"",
+        col=c("lightblue","pink"), ylim = c(0,0.7))
+#library(rcolobrewer)
+```
+
+```{r}
+barplot(table(sexo), horiz = TRUE)
+```
+
+```{r}
+set.seed(22)
+respuestas = sample(c("si","no"), size = 12, replace = T)
+barplot(table(sexo,respuestas), legend.text= TRUE, col=c("aquamarine2","gold2"))
+barplot(table(sexo, respuestas), legend.text= c("Hombre","Mujer"), beside = T, col=c("aquamarine2","gold2"))
+```
+

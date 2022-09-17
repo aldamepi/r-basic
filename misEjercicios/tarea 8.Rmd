@@ -1,0 +1,198 @@
+---
+title: "Tarea 8"
+author: "Alberto Mengual"
+date: "6/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TAREA 8
+
+Carga en R o en Python el CSV de la web http://winterolympicsmedals.com/medals.csv y responde a las preguntas de la tarea.
+```{r cargadf}
+medallas = read.csv("data/medals.csv")
+str(medallas)
+head(medallas, 9)
+medallas
+```
+
+
+### Preguntas de esta tarea
+
+1. ¿Cuantos deportistas aparecen en el data frame?
+```{r pregunta1}
+
+dim(medallas)
+
+sprintf("En el data frame aparrecen %i medallistas",dim(medallas)[1])
+
+```
+
+
+
+2. ¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?
+```{r pregunta 2}
+
+cuentaMed = aggregate(X~Medal, data= medallas, FUN = length)
+cuentaMed
+sprintf("%i han ganado medallas de bronce", cuentaMed[cuentaMed$Medal=="Bronze",2])
+sprintf("%i han ganado medallas de plata", cuentaMed[cuentaMed$Medal=="Silver",2])
+sprintf("%i han ganado medallas de oro", cuentaMed[cuentaMed$Medal=="Gold",2])
+```
+
+
+3. ¿En cuantos lugares se han hecho olimpiadas de invierno?
+```{r pregunta3}
+lugares = length(levels(medallas$City))
+sprintf("Se han hecho olimpiadas de invierno en %i ciudades.",lugares)
+```
+
+
+4. ¿Cuantos hombres y cuantas mujeres hay?
+```{r pregunta4}
+
+cuentasex=aggregate(X~Event.gender, data = medallas, FUN = length)
+cuentasex
+
+sprintf("Hay %i mujeres y %i hombres.",cuentasex[cuentasex$Event.gender=="W",2],
+        cuentasex[cuentasex$Event.gender=="M",2])
+
+```
+
+
+5. ¿En qué año participaron más deportistas?
+```{r pregunta5}
+
+cuentayear=aggregate(X~Year, data = medallas, FUN = length)
+
+maxyear = cuentayear[cuentayear$X==max(cuentayear$X),1]
+
+sprintf("El año en el que participaron más deportistas fue %i.",maxyear)
+
+```
+
+
+6. El campo NOC indica el país del ganador de la medalla. ¿Qué país puede presumir de haber ganado más medallas de oro en los juegos de invierno entre 1960 y 1996?
+```{r pregunta6}
+
+cuentapais=aggregate(X~Medal + Year+NOC, data=medallas, FUN=length)
+#cuentapais
+cuentaoro = cuentapais[cuentapais$Medal=="Gold",]
+#cuentaoro
+cuentaoro2=cuentaoro[cuentaoro$Year>=1960 & cuentaoro$Year<=1996, ]
+#cuentaoro2
+cuentapais2=aggregate(X~NOC, data = cuentaoro2, FUN = sum)
+#cuentapais2
+paisgana=cuentapais2[cuentapais2$X==max(cuentapais2$X),1]
+#droplevels(paisgana)
+sprintf("El país que mas medallas de oro ha ganado entre 1960 y 1996 es: %s.",paisgana)
+
+```
+
+
+### Respuestas del Profe:
+¿Cuantos deportistas aparecen en el data frame?
+
+> dim(df)[1]
+[1] 2311
+
+¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?
+```{r respuesta2}
+count(df, Medal)
+```
+
+> 
+  Medal   n
+1 Bronze  764
+2 Gold    774
+3 Silver  773
+
+¿En cuantos lugares se han hecho olimpiadas de invierno?
+```{r respuesta3}
+length(unique(as.factor(df$City)))
+```
+
+
+
+¿Cuantos hombres y cuantas mujeres hay?
+```{r respuesta4}
+count(df, Event.gender)
+```
+
+
+  Event.gender n
+1 M            1386
+2 W            802
+
+¿En qué año participaron más deportistas? OJO!! magia negra
+```{r respuesta5}
+df=medallas
+#df$Year
+max(df$Year)
+```
+
+
+
+El campo NOC indica el país del ganador de la medalla. ¿Qué país puede presumir de haber ganado más medallas de oro en los juegos de invierno entre 1960 y 1996?
+```{r respuesta6}
+which.max(table(df$NOC))
+
+```
+
+
+
+## Mis comentarios
+
+He aprendido a usar la función aggregate, aunque me ha dado varios fallos con el na.rm y la función count. 
+
+De la corrección de Juan Gabriel he aprendido a usar la función count(df,variable) y que la función max(df$variable) tiene algo de "magia negra": no solo da el máximo, sino que cuenta tambien... Tengo que trabajar la función unique
+
+El problema 6 de Juan Gabriel estaba mal, me parece.
+
+funcion table:
+https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/table
+https://www.datasciencemadesimple.com/table-function-in-r/
+El operador %>% del paquete dplyr:
+https://rsanchezs.gitbooks.io/rprogramming/content/chapter9/pipeline.html
+
+
+## Respuestas de un compañero:
+
+¿Cuantos deportistas aparecen en el data frame?
+
+nrows(medals)
+
+2311
+
+¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?
+
+oro <- medals %>% filter(Medal == 'Gold' )
+
+nrow(oro)
+
+plata <- medals %>% filter(Medal == 'Silver' )
+
+nrow(plata)
+
+bronce <- medals %>% filter(Medal == 'Bronze' )
+
+nrow(bronce)
+
+¿En cuantos lugares se han hecho olimpiadas de invierno?
+
+unique(medals$City)
+
+¿Cuantos hombres y cuantas mujeres hay?
+
+hombres <- medals %>% filter(medals$'Event gender' == 'M')
+
+nrow(hombres)
+
+En qué año participaron más deportistas?
+
+max_part <- medals %>% select(Year) %>% count(Year) %>% group_by(Year)
+
+max(max_part)

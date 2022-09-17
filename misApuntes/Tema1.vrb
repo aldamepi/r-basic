@@ -1,0 +1,14 @@
+\frametitle{Calculadora básica - Operaciones}
+\protect\hypertarget{calculadora-buxe1sica---operaciones-1}{}
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Código & Significado \\
+\midrule
+\endhead
+\texttt{pi} & \href{https://es.wikipedia.org/wiki/Número_π}{\(\pi\)} \\
+\texttt{Inf} &
+\href{https://es.wikipedia.org/wiki/Infinito}{\(\infty\)} \\
+\texttt{NaN} & Indeterminación (Not a Number) \\
+\texttt{NA} & Valor desconocido (Not Available) \\
+\bottomrule
+\end{longtable}

@@ -1,0 +1,18 @@
+\frametitle{Los chunks en modo línea}
+\protect\hypertarget{los-chunks-en-modo-luxednea-1}{}
+Con lo explicado hasta ahora, solamente hemos generado resultados en la
+línea aparte
+
+Para introducir una parte de código dentro de un párrafo y que se
+ejecute al comilarse el documento mostrando así el resultado final, hay
+que hacerlo utilizando \texttt{\textasciigrave{}r\ ...\textasciigrave{}}
+
+\textbf{Ejemplo}
+
+La raíz cuadrada de 64 es
+\texttt{\textasciigrave{}r\ sqrt(64)\textasciigrave{}} o, lo que viene
+siendo lo mismo,
+\(\sqrt{64}=\)\texttt{\textasciigrave{}r\ sqrt(64)\textasciigrave{}}
+
+La raíz quinta de 32 es 8 o, lo que viene siendo lo mismo,
+\$\sqrt{64}=\$5.6568542

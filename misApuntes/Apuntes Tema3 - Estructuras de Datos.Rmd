@@ -1,0 +1,217 @@
+---
+title: "Apuntes del Tema 3 - Estructuras de Datos"
+author: "Alberto Mengual"
+date: "4/27/2021"
+output: pdf_document
+---
+
+### DEFINIR UN VECTOR
+
+Al incluir ``` scan()``` en un CHUNK y compilar el Rmd: 
+
+da como resultado numeric(0) y no permite ingresar el vector por consola. 
+
+Podemos ver el resultado del CHUNK en la vista previa, antes de compilarlo.
+
+
+```{r vectorBasico, comment=NA, message=FALSE}
+c(2,3,6)
+scan()
+rep('estadistica',5)
+```
+
+### EL COMANDO fix(x)
+
+Tenemos que incluir un vector en una variable, ¿que pasa si se mezclan tipos de datos datos?:
+
+
+```{r prepararFix, comment=NA}
+x<- c(4,7.82,"albertito")
+```
+
+fix(x)
+
+
+```{r varClass, comment=NA}
+x
+class(x)
+```
+
+Todos los datos se convierten al tipo character.
+
+Al definir una variable dentro de un CHUNK, adquiere un valor propio dentro del Rmd, independiente de las variaciones que sufra esa misma variable en el entorno de Rstudio. Además podra crear sus mensajes y errores particulares si no es tratada correctamente.
+
+
+## PROGRESIONES ARITMETICAS Y SECUENCIAS
+
+Definición de progresión aritmética:
+$$a_n=a_1+(n-1)\cdot d$$
+De esta manera, $a_n$ para $n=1$ sería: $a_1=a_1$. El cual sería el primer termino porque los números naturales $\mathbb{N}$ no comprenden al cero.
+
+Esta expresión, para cualquier valor de la recta de los números reales $\mathbb{R}$, manteniendo $d$ como la diferencia entre el valor de la progresión para dos numeros naturales $\mathbb{N}$ consecutivos, se podría escribir como:
+$$y= dx+y_0$$
+
+Si igualamos $a_n=y(x)$, nos quedaría: $a_1=a_0+d$ o $y(x=1)=d+y_0$.
+
+### SECUENCIAS - EJERCICIOS
+
+* Imprimid los números del 1 al 20:
+```{r 1al20, comment=NA}
+1:20
+```
+
+* Imprimd los 20 primeros números pares:
+```{r 20pares, comment=NA}
+seq(2,length.out=20, by=2)
+```
+
+* Imprimid 30 números equidistantes entre el 17 y el 98, mostrando solo 4 cifras significativas:
+```{r 30n, comment=NA}
+signif(seq(17,98,length.out=30),digits = 4)
+```
+
+
+## FUNCIONES CON VECTORES
+
+### FUNCIONES CON VECTORES - EJERCICIOS
+
+* Combinad las dos funciones: sort y rev. Para crear una función que dado un vector $x$ os lo devuelva ordenado en orden decreciente.
+```{r combirev, comment=NA}
+x = c(5,7,2,76,54,-14,32,45)
+rev(sort(x))
+```
+
+* Razonad si aplicar primero sort y luego rev a un vector x daría en general el mismo resultado que aplicar primero rev y luego sort:
+
+Yo creo que no daría lo mismo, dar la vuelta a un vector ordenado que a un vector desordenado. Aunque si daría lo mismo ordenar un vector desordenado, que desordenado y dado la vuelta. Es decir, si se quiere ordenar un vector con sort, da igual que previamente este invertido o no:
+```{r combiRev2, comment=NA}
+x = c(5,7,2,76,54,-14,32,45)
+sort(x)
+sort(rev(x))
+```
+
+Pero si se quiere obtener un vector ordenado de forma decreciente combinando las funciones sort y rev, habria que ordenarlo antes de darle la vuelta, si no, no saldría nada:
+```{r combiRev3, comment=NA}
+x = c(5,7,2,76,54,-14,32,45)
+rev(x)
+rev(sort(x))
+```
+
+* Investigad la documentación de la función sort (recordad que podéis usar la sintaxis ?sort en la consola) para leer si cambiando algún argumento de la misma podéis obtener el mismo resultado que habéis programado en el primer ejercicio:
+```{r sort, comment=NA}
+x = c(5,7,2,76,54,-14,32,45)
+sort(x,decreasing = TRUE)
+```
+
+## 50. EJERCICIO BINOMIO DE NEWTON
+
+Vamos a trabajar con el producto notable y el binomio de Newton.
+
+### PRODUCTO NOTABLE
+
+La formula del producto notable:
+$$(a+b)^2=a^2+2ab+b^2$$
+
+## FUNCION CON R
+
+
+```{r biNewton2, comment=NA}
+biNewton2=function(a,b){
+  a^2+2*a*b+b^2
+}
+biNewton2(1,2)
+biNewton2(2,1)
+```
+
+
+## BINOMIO DE NEWTON
+
+La formula del binomio de newton es:
+$$(a+b)^n= \sum_{k=0}^n {n\choose k}\cdot a^{n-k}\cdot b^k= {n\choose 0}\cdot a^n \cdot b^0 + \cdots + {n\choose n}\cdot a^0\cdot b^n$$
+
+## FUNCION CON R
+
+Se realiza mediante la suma acumulada de n terminos, en cada uno de los cuales esta compuesto el binomio de newton. Finalmente se llama al ultimo valor del vector cumsum.
+
+O también se puede hacer directamente con la función sum: 
+```{r borrador biNew, comment=NA, eval=FALSE}
+sum(choose(n,i)*a^(n-i)*b^i)
+```
+
+```{r biNewton, comment=NA}
+biNewton=function(a,b,n){
+  i = 0:n
+  cumsum(choose(n,i)*a^(n-i)*b^i)[n+1]
+}
+biNewton(1,2,2)
+
+```
+
+
+## 55. EJERCICIOS CON MATRICES
+
+¿Cómo definirías una matriz constante? Es decir, ¿cómo definirías una matriz $\boldsymbol{A}$ tal que $\forall$ $i=1,...,n;$ $j=1,...,m,$ $ a_i,j=k$ siendo $k\in\mathbb{R}$? Como R no admite incógnitas, prueba para el caso específico $n=3, m=5, k=0$
+
+
+```{r matk, comment=NA}
+MK=matrix(0,nrow = 3,ncol = 5)
+MK
+
+```
+
+
+Con el vector vec = (1,2,3,4,5,6,7,8,9,10,11,12) crea la matriz
+
+```{r matvec, comment=NA}
+matrix(c(1,2,3,4,5,6,7,8,9,10,11,12),nrow = 3)
+
+```
+
+
+## 56. EJERCICIOS CON MATRICES
+
+Siendo las matrices $A= \begin {pmatrix} 2 & 0 & 2 \\ 1 & 2 & 3 \\0 & 1 & 3 \end{pmatrix}$ y $B = \begin{pmatrix} 3&2&1\\1&0&0\\1&1&1 \end{pmatrix}$, realiza las siguientes operaciones:  $A*B, A^2$ y $B^3$
+
+```{r opmat, comment=NA}
+A=rbind(c(2,0,2),c(1,2,3),c(0,1,3))
+B=rbind(c(3,2,1),c(1,0,0),c(1,1,1))
+
+axb= A%*%B
+axb
+a2= A%^%2
+a2
+a22=mtx.exp(A,2)
+a22
+b3= B%^%3
+b3
+b32=mtx.exp(B,3)
+b32
+```
+
+
+Para los valores dados, comprobad la igualdad llamada descomposición canónica: 
+$$\boldsymbol{M=P\cdot D  \cdot P^{-1}}$$
+Donde P es la matriz de vectores propios y D la matriz diagonal cuyas entradas son los valores propios:
+```{r desCanonica, comment=NA}
+M = rbind(c(2,6,-8), c(0,6,-3), c(0,2,1))
+M
+P=eigen(M)$vectors
+P
+D=diag(eigen(M)$values)
+D
+Q=solve(P)
+Q
+S=P%*%D%*%Q
+S
+#eigen(M)
+
+```
+
+
+
+
+
+
+
+
+

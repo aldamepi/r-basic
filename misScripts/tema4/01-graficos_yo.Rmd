@@ -1,0 +1,143 @@
+---
+title: "01-Graficos_yo"
+author: "Alberto Mengual"
+date: "5/31/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Gráficos con la función `plot`
+
+
+```{r graficoNotas, fig.align='center', fig.cap="Mi primer gráfico", fig.dim=8, fig.subcap="de verdad"}
+alumnos=c(1:10)
+notas= c(2,3,5,7,8,10,7,8,6,5)
+plot(alumnos,notas)
+legend("bottomright", legend = "notas", pch = 1)
+
+```
+
+
+Plot de un vector plot(c)=plot(1:length(c),c)
+```{r}
+plot(exp(1)^(1:6))
+legend("topleft",legend=expression(e^n), pch = 1)
+
+plot(2^(1:6))
+legend("topleft",legend=expression(2^n), pch = 1)
+
+```
+
+plot de una funcion
+```{r}
+f = function(x) { sqrt(x) }
+plot(f)
+legend("right", legend = expression(sqrt(x)),lwd = 1)
+```
+
+
+# parametros
+
+```{r parGraficos, fig.align='center', echo=FALSE, fig.cap="Sucesión de Fibonacci"}
+n = 1:20
+fib = (1/sqrt(5))*((1+sqrt(5))/2)^n - (1/sqrt(5))*((1-sqrt(5))/2)^n
+fib
+
+par(mfrow=c(1,2))
+
+plot(fib, xlab = "n",ylab = expression(f(n)),
+     main = "Escala logaritmica", pch=21, col="brown", 
+     bg="violet", cex=1, log = "y")
+legend("topleft", legend="Fibonacci", pch=21, col="brown")
+
+plot(fib, xlab = "n",ylab = expression(f(n)),
+     main = "Escala natural", pch=21, col="darkblue", 
+     bg="darkgoldenrod", cex=0.8)
+legend("topleft", legend="Fibonacci", pch=21, col="darkblue")
+
+par(mfrow=c(1,1))
+
+```
+
+## Tipos de Gráficos
+```{r comparaTipos, fig.align='center', fig.cap="Comparación de Tipos de Gráficos", echo=FALSE}
+par(mfrow=c(3,2))
+
+x = c(50:59)
+y = c(2,9,25,3,100,77,62,54,19,40)
+
+plot(x,y, pch = 23, cex = 2, col = "blue", type = "p", main = "puntos")
+plot(x,y, pch = 23, cex = 2, col = "blueviolet", type = "l", main = "rectas")
+plot(x,y, pch = 23, cex = 2, col = "gold", type = "b", main = "ambos")
+plot(x,y, pch = 23, cex = 2, col = "deeppink", type = "o", main = "traspasa")
+plot(x,y, pch = 23, cex = 2, col = "springgreen", type = "h", main = "histograma")
+plot(x,y, pch = 23, cex = 2, col = "firebrick1", type = "s", main = "escalones")
+par(mfrow = c(1,1))
+```
+
+### más parametros
+```{r parametrosGraficos, fig.align='center', fig.cap="jugar con los parametros en la secuencia Fibonacci"}
+plot(n,fib, pch=8, lty=4, lwd=2, cex=1.5, type = "o", col="navy", 
+     main = "vista parcial",
+     # log = "y",
+     ylab = "ordenadas", xlab = "abscisas",
+     xlim = c(10,15), ylim = c(0,2000),
+     xaxp = c(0,20,4), 
+     yaxp = c(1000,6000,5)
+     )
+legend("topleft", legend = "Fibonacci", pch=8, col="navy", lty=4)
+```
+
+
+### Añadir elementos a un Gráfico
+```{r aElementos, fig.align='center', fig.cap="añadiendo elementos a una función"}
+f <- function(x){
+  x^2 -2*x + sqrt(abs(x))
+}
+plot(f, xlim = c(-3,3), col= "mediumorchid",type="s", lty=3, lwd=2,
+     main="puntos y rectas",
+     ylab = expression(f(n))
+     )
+points(0,0, pch=19)
+points(-3:3,(-3:3)^2, pch=21, col="navy", bg="orange4")
+abline(v=2, lty="dotted", col="grey")
+abline(h=5, lty="dotdash", col="springgreen")
+
+legend("top", 
+       legend = c(expression(x^2 -2*x+sqrt(abs(x))),
+                  expression(x^2),"y=5","x=2"),
+       lty = c(2,1,4,3), col = c("mediumorchid","orange4","springgreen","grey"))
+
+```
+
+
+### Crear una parrilla
+```{r ,fig.align='center'}
+f<- function(x){x^2}
+plot(f, xlim = c(-3,3), col="red", lwd=2, ylab = expression(x^2), 
+     xlab="x",
+     yaxp=c(0,9,9))
+abline(h=0:9, v=-3:3, lty="dotted", col="grey")
+```
+
+## LA FUNCION TEXT - AÑADIR TEXTO
+```{r text, fig.align='center', fig.cap="añadiendo texto a vectores de puntos"}
+alumnos=c(1:10)
+notas=c(3,4,2,5,7,8,5,7,9,10)
+etiquetas=c("S","S","S","A","N","N","A","N","E","E")
+plot(alumnos,notas, ylim=c(0,10), xlim = c(1,10),
+     main = "Etiquetas")
+points(0,0,pch=19)
+text(alumnos,notas,etiquetas, 
+     pos=c(rep(3,times=9),1)
+     )
+
+```
+
+
+
+
+

@@ -1,0 +1,271 @@
+---
+title: "Practica Boxplot"
+author: "Alberto Mengual"
+date: "7/9/2021"
+output: html_document
+---
+
+
+# MINI EJERCICIO BOXPLOT - DATOS CUANTITATIVOS
+Consiste en coger varios datasets de los famosos que tengan datos numericos y aplicarle el boxplot.
+
+
+Creo que debería practicar con:
+
+* datos cualitativos:
+  + crosstable (para bidimensionales) - hecho en los mosaicos
+  + diagrama de mosaico (para bidimensionales) - hecho
+  + 
+  + añadir a ftable un titulo y los totales y las relativas - PENDIENTE, me faltan los titulos y las acumuladas
+  + evitar que se repitan los mosaicos - hecho
+  
+* ordinales:
+  + sintaxis de cumsum() - hecho
+  + añadir tablas a los gráficos de mosaico - hecho ( es de los cualitativos)
+  + añadir tablas a los diagramas de barras - hecho
+  + añadir tablas de frecuencias acumuladas - hecho
+  + mejorar la estetica de crosstable??
+  + intentar que salgan juntos los gráficos de frecuencias con sus acumuladas.- PENDIENTE
+  
+  
+* cuantitativos:
+  + añadir tablas a los diagramas de caja y bigotes totales -(hecho)
+  + añadir tablas a los diagramas de cajas y bigotes agrupados - hecho(faltan los nombres)
+  + agrupar los bigotes por factores - hecho
+  + crear graficos con puntos de colores para las variables cualitativas que faltan, añadir tiulos al grafico y la leyenda - hecho
+  + crear graficos y tablas (mas o menos hecho)
+
+* repetir con el otro dataframe
+
+* crear una plantilla de analisis descriptivo:
+  + cambir dc por df
+* 
+* 
+
+
+## RESUMEN TAREAS
+- Hacerle un boxplot a cada uno de ellos, 
+- quitar las variables que no son numericas.
+- Ponerle un titulo y sus respectivas etiquetas y algún color.
+- Entender el concepto del bigote.
+
+
+### IMPORTAR DATASETS
+¿Cuales datasets voy a importar para este mini ejercicio?
+Iris y Datacrab
+Podía haber cogido cualquier otro, para ver los data frames disponibles usar la función data()
+```{r importarDatos}
+dc = read.table("../data/datacrab.txt", header = TRUE, row.names = 1)
+ir = iris
+
+# convertir las variables categoricas a factores:
+dc$color = factor(dc$color, ordered = FALSE)
+dc$spine = factor(dc$spine, ordered = TRUE)
+dc$satell = factor(dc$satell, ordered = FALSE)
+
+```
+
+
+### INFORMACIÓN BÁSICA DEL DATASET Y CREACION DE FACTORES
+```{r infoB}
+
+head(dc)
+str(dc)
+summary(dc)
+
+```
+
+
+### TRATAMIENTO DE LAS VARIABLES
+
+#### Frecuencias absolutas de las variables cualitativas:
+```{r ftableCali}
+tc = ftable(dc$color, dc$spine, dc$satell, dnn = c("Color","Spine", "Satell"))
+tc
+ftable(round(prop.table(table(dc$color, dc$spine, dc$satell)),2), 
+       dnn = c("Color","Spine", "Satell"))
+```
+
+#### Variables cualitativas y ordinales * Diagramas de mosaico
+```{r mosaicos}
+cual.col = c()
+for (i in names(dc)) {
+  if ("factor" %in% class(dc[,i])){
+    cual.col = c(cual.col,i)
+  }
+}
+library(gmodels)
+m = matrix(ncol = 2)
+for (i in cual.col) {
+  for (j in cual.col) {
+    if (i != j & j != "satell") {
+      if (i %in% m[,2] & j %in% m[,1]){
+        next
+      }else{
+        m = rbind(m,c(i,j))
+        plot(table(dc[,i],dc[,j]), xlab = i, ylab = j,
+             main = paste(j, "vs",i), col = c("lightblue","lightpink"))
+        
+        CrossTable(dc[,i],dc[,j], prop.chisq = FALSE, dnn = c(i,j),
+                   format = "SPSS")
+      }
+    }
+  }
+}
+
+
+```
+
+
+
+#### Variables cualitativas y ordinales * Diagramas de barras
+```{r barplots}
+ord.col = c()
+cuant.col=c()
+for (n in names(dc)){
+  if ("factor" %in% class(dc[,n])){
+    par(mfrow=c(1,2))
+    barplot(table(dc[,n]), main=n, ylab = "frecuencias absolutas",
+         col="cadetblue4")
+    barplot(prop.table(table(dc[,n])), main=n, ylab = "frecuencias relativas",
+         col="coral2")
+    tFact = table(dc[,n])
+    tFact_rel = prop.table(table(dc[,n]))
+    print("Tabla de Frecuencias Absolutas")
+    print(tFact)
+    print("Tabla de Frecuencias Relativas")
+    print(round(tFact_rel,3))
+#    CrossTable(dc[,n])
+#    apply(dc[,n], FUN = table)
+#    prop.table(table(dc[,n]))
+  }else{
+    cuant.col = c(cuant.col,n)
+  }
+}
+for (n in names(dc)){
+  if ("ordered" %in% class(dc[,n])){
+    ord.col = c(ord.col,n)
+    barplot(cumsum(table(dc[,n])), main=n,
+            ylab = "frec. abs. acumuladas",col="aquamarine4")
+    barplot(cumsum(prop.table(table(dc[,n]))), main=n,
+            ylab = "frec. rel. acumuladas",col="hotpink")
+    tFact_Cum = cumsum(table(dc[,n]))
+    tFact_rel_Cum = cumsum(prop.table(table(dc[,n])))
+    print("Tabla de Frecuencias Absolutas Acumuladas")
+    print(tFact_Cum)
+    print("Tabla de Frecuencias Relativas Acumuladas")
+    print(tFact_rel_Cum)
+  }
+}
+```
+
+
+#### Variables cuantitativas
+```{r boxplotsTotales}
+#summary(dc[,cuant.col])
+for (x in cuant.col) {
+  boxplot(dc[,x], col = "lightblue", notch = FALSE, main = x)
+  points(mean(dc[,n]), col = "gold", pch=19, cex = 1.5)
+  summCuant = summary(dc[,x])
+  print(sprintf("Tabla Resumen de %s",x))
+  print(summCuant)
+#  lapply(dc[,n], FUN = summary)
+}
+```
+
+
+
+### AGRUPAR DATOS NUMERICOS
+#### Peso frente a Ancho agrupado por colores
+```{r coloresAgrupados}
+library(ggplot2)
+library(RColorBrewer)
+
+# Crear escalas de colores
+colorcolor = brewer.pal(4,"Dark2")
+colorspine = brewer.pal(3,"Set1")
+#No hay paletas de 15 colores
+
+# el cuatro son los colores que se toman de dicha paleta
+names(colorcolor) = levels(dc$color)
+escalac = scale_color_manual(name = "color", values = colorcolor)
+
+# Crear gráfico con la escala de colores personal:
+
+p = ggplot(dc, aes(width,weight, colour = color)) +
+  geom_point()
+p + escalac
+
+#plot(dc$width,dc$weight, type = "p", main = "Peso Vs Ancho de los Cangrejos",
+#     xlab = "Ancho", ylab = "Peso")
+```
+
+#### Agrupados por spine con colores
+```{r}
+# el cuatro son los colores que se toman de dicha paleta
+names(colorspine) = levels(dc$spine)
+escalasp = scale_color_manual(name = "spine", values = colorspine)
+
+# Crear gráfico con la escala de colores personal:
+
+psp = ggplot(dc, aes(width,weight, colour = spine)) +
+  geom_point()
+psp + escalasp
+
+```
+
+
+
+```{r datos agrupados}
+
+for (i in cuant.col) {
+  for (j in cual.col) {
+#    tSum = aggregate(dc[,i]~dc[,j], FUN = summary)
+    boxplot(dc[,i]~dc[,j], col = "deepskyblue", 
+            main = paste(i,"vs",j), 
+            ylab = i, xlab = j)
+    medias = aggregate(dc[,i]~dc[,j], FUN = mean)
+    points(medias, col = "floralwhite", pch = 19)
+#    summary(dc[,i],dc[,j])
+#    j = factor(dc[,j])
+    tSum = by(dc[,i],dc[,j], FUN = summary)
+#    tSum = by(dc[,i],j, FUN = summary)
+    
+    print(tSum)
+  }
+}
+# by(dc[,cuant.col],dc[,"color"], FUN = summary)
+# by(dc[,cuant.col],dc[,"spine"], FUN = summary)
+# by(dc[,cuant.col],dc[,"satell"], FUN = summary)
+```
+
+
+
+
+
+## DUDAS
+* ¿tengo que convertir las variables categoricas a factores en R?
+creo que si... sobre todo si son ordinales, pero no lo tengo claro... lo voy haciendo con la función factor y ordered=TRUE
+Vale, al convertirlos a factores ordenados la función summary me devuelve las frecuencias absolutas de los mismos.
+
+* ¿cómo se hacen todas las tablas de una vez para todas las variables categoricas en R? RESUELTO
+
+* ¿Cómo seleccionar diferentes colores según las categorías de un factor? más o menos resuelto, ver chunk de coloresAgrupados
+
+* ¿cómo puedo añadir filas totales y frecuencias relativas con la funcion ftable?
+
+* ¿Por que no me salen las tablas agrupas por by o aggregate con los bucles for? - RESUELTO. me faltaba añadirlo a una variable y hacerle un print, con aggregate sigue sin funcionar
+
+* ¿Como hacer tablas para los datos cualitativos? ¿Que no sean ni tablas de frecuencias, ni summary? ¿Serán los histogramas? (interesa detectar los outliers)
+
+* ¿Cómo se le puede poner titulo a las tablas de summary?
+
+* ¿Se puede mejorar la estetica de la tabla de función gmodels::crosstable?
+
+* ¿cómo puedo hacer para que no se me repitan los diagramas de mosaico, color spine, spine color? - RESUELTO
+
+* ¿se puede ajustar el ylim del gráfico dentro del bucle for?
+
+* Cómo puedo hacer para que me salgan juntos los diagramas de las variables ordinales: frecuencias y acumuladas?
+
+* ¿Cómo puedo cambiar los nombres de las listas de las tablas summary en los diagramas de bigotes agrupados? - Probar con las funciones aggregate y head
